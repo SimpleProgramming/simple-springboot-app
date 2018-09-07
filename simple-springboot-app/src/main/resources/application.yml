@@ -1,0 +1,12 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: student-rest-service
+  profiles:
+    include:
+    - complex
+
+configuration:
+  property:
+    value: Hello from Property file
