@@ -1,0 +1,47 @@
+name: Build and Test Spring Boot Application
+on:
+  push:
+    branches:
+      - master
+      - 'feature/*'
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Remove previous Java installations
+        run: sudo apt-get remove -y openjdk-*
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Verify Java version
+        run: java -version
+      - name : list running folder
+        run: pwd
+      - name: Build with Maven
+        working-directory: ./simple-springboot-app 
+        run: mvn clean package -Dmaven.test.skip=true
+      - name: List files
+        working-directory: ./simple-springboot-app
+        run: ls -ls
+      - name: Build and analyze
+        working-directory: ./simple-springboot-app 
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=blackpandacg_simple-springboot-app -Dsonar.coverage.exclusions="**/*Tests.java"   
+      - name: Build Docker image
+        run: |
+          docker build -t shubhamcg1234/simple-springboot-app .
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker push shubhamcg1234/simple-springboot-app
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+

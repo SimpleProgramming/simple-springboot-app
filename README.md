@@ -1,5 +1,5 @@
 # Simple Spring Boot Application - A Quick Start Guide
-
+making some changes
 It is an approach to develop spring based application with very less configuration. 
 It provides defaults for code and annotation configuration to quick start new spring projects within no time.
 
