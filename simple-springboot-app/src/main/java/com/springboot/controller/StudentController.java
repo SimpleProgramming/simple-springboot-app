@@ -20,6 +20,6 @@ public class StudentController {
 		if (StringUtils.isBlank(student.getLastName())) {
 			throw new InvalidFieldException("Last Name is a required field");
 		}
-		return String.format("Authorization %s is valid, and Data is saved", authorization);
+		return String.format("Authorization %s is valid, and Data is saved in the database", authorization);
 	}
 }
